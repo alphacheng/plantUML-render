@@ -1,0 +1,135 @@
+﻿<Window x:Class="plantuml_render.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:plantuml_render"
+        mc:Ignorable="d"
+        Title="PlantUML Render" Height="600" Width="1000"
+        MinWidth="800" MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    <Window.Resources>
+        <!-- 按钮样式 -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#4285F4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3367D6"/>
+                                <Setter Property="BorderBrush" Value="#2050B2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2050B2"/>
+                                <Setter Property="BorderBrush" Value="#1A3C7A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 文本框样式 -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D0D0D0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#4285F4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 图像区域样式 -->
+        <Style TargetType="Image">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Stretch" Value="Uniform"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧输入区域 -->
+        <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="10">
+            <StackPanel>
+                <TextBlock Text="PlantUML Code" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <TextBox x:Name="PlantUmlCodeTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="300" MinHeight="200"/>
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Right">
+                    <Button Content="Render" Click="RenderButton_Click" Width="100"/>
+                    <Button Content="Save" Click="SaveButton_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- 右侧图像显示区域 -->
+        <Border Grid.Row="0" Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="10">
+            <Canvas x:Name="ImageCanvas">
+                <Image x:Name="UmlImage" Stretch="Uniform"
+                       MouseWheel="UmlImage_MouseWheel"
+                       MouseDown="UmlImage_MouseDown"
+                       MouseMove="UmlImage_MouseMove"
+                       MouseUp="UmlImage_MouseUp"
+                       MouseDoubleClick="UmlImage_MouseDoubleClick">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="ImageScaleTransform" ScaleX="1" ScaleY="1" />
+                            <TranslateTransform x:Name="ImageTranslateTransform" X="0" Y="0" />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Canvas>
+        </Border>
+
+        <!-- 状态栏 -->
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2" Background="#4285F4" Foreground="White" Padding="10">
+            <StatusBarItem>
+                <TextBlock Text="Ready" VerticalAlignment="Center"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="StatusText" Text="Status: Idle" VerticalAlignment="Center"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
